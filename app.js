@@ -1,5 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors'); // ✅ Add this line
 const connectDB = require('./config/db');
 const blogRoutes = require('./routes/blogs');
 
@@ -7,6 +8,10 @@ dotenv.config();
 connectDB();
 
 const app = express();
+
+// ✅ Enable CORS
+app.use(cors());
+
 app.use(express.json());
 
 app.use('/api/blogs', blogRoutes);
