@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const cors = require('cors'); // ✅ Add this line
+const cors = require('cors'); // ✅ CORS middleware
+const helmet = require('helmet'); // ✅ Helmet for secure headers
 const connectDB = require('./config/db');
 const blogRoutes = require('./routes/blogs');
 
@@ -11,6 +12,9 @@ const app = express();
 
 // ✅ Enable CORS
 app.use(cors());
+
+// ✅ Enable Helmet (Security)
+app.use(helmet());
 
 app.use(express.json());
 
