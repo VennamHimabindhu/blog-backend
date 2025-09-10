@@ -6,7 +6,7 @@ const User = require('../models/User');
 // @route   POST /api/auth/register
 // @desc    Register a new user
 router.post('/register', async (req, res) => {
-  const { email, password } = req.body;
+  const { name, email, password, role } = req.body; // ✅ added name and role
 
   try {
     // Check if user already exists
@@ -19,7 +19,7 @@ router.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create and save new user
-    const newUser = new User({ email, password: hashedPassword });
+    const newUser = new User({ name, email, password: hashedPassword, role }); // ✅ added name and role
     await newUser.save();
 
     res.status(201).json({ message: 'User registered successfully' });
@@ -49,7 +49,9 @@ router.post('/login', async (req, res) => {
 
     res.status(200).json({
       message: 'Login successful',
-      userId: user._id
+      userId: user._id,
+      name: user.name, // ✅ added
+      role: user.role  // ✅ added
     });
   } catch (error) {
     console.error('Login error:', error.message);

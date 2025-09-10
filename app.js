@@ -4,6 +4,7 @@ const cors = require('cors'); // ✅ CORS middleware
 const helmet = require('helmet'); // ✅ Helmet for secure headers
 const connectDB = require('./config/db');
 const blogRoutes = require('./routes/blogs');
+const authRoutes = require('./routes/auth'); // ✅ add auth routes
 
 dotenv.config();
 connectDB();
@@ -18,7 +19,9 @@ app.use(helmet());
 
 app.use(express.json());
 
+// ✅ Routes
 app.use('/api/blogs', blogRoutes);
+app.use('/api/auth', authRoutes); // ✅ mount auth routes
 
 app.get('/', (req, res) => {
   res.send('Blog API is running');
