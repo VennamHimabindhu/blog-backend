@@ -6,7 +6,7 @@ const User = require('../models/User');
 // @route   POST /api/auth/register
 // @desc    Register a new user
 router.post('/register', async (req, res) => {
-  const { name, email, password, role } = req.body; // ✅ added name and role
+  const { email, password } = req.body;
 
   try {
     // Check if user already exists
@@ -19,8 +19,10 @@ router.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create and save new user
-    const newUser = new User({ name, email, password: hashedPassword, role }); // ✅ added name and role
+    const newUser = new User({ email, password: hashedPassword });
     await newUser.save();
+
+    console.log("✅ Registered new user:", email); // debug
 
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
@@ -38,20 +40,27 @@ router.post('/login', async (req, res) => {
     // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
+      console.log("❌ User not found:", email); // debug
       return res.status(404).json({ error: 'User not found' });
     }
 
+    // Debug logs
+    console.log("👉 Plain password entered:", password);
+    console.log("👉 Stored hash in DB:", user.password);
+
     // Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log("👉 Password match result:", isMatch);
+
     if (!isMatch) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
+    console.log("✅ Login successful for:", email); // debug
+
     res.status(200).json({
       message: 'Login successful',
-      userId: user._id,
-      name: user.name, // ✅ added
-      role: user.role  // ✅ added
+      userId: user._id
     });
   } catch (error) {
     console.error('Login error:', error.message);
